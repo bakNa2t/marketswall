@@ -6,7 +6,7 @@ export default function Home() {
       <main className="flex flex-col gap-[32px] row-start-2 items-center">
         <h1 className="text-3xl font-bold">Wellcome to Marketswall</h1>
         <p>Find your own tenant here</p>
-        <Button>Get started</Button>
+        <Button variant="elevated">Get started</Button>
       </main>
     </div>
   );
