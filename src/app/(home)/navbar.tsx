@@ -24,7 +24,18 @@ const navbarItems = [
 ];
 
 const NavbarItem = ({ href, children, isActive }: NavbarItemProps) => {
-  return <Button>{children}</Button>;
+  return (
+    <Button
+      asChild
+      variant="outline"
+      className={cn(
+        "bg-transparent hover:bg-transparent rounded-full border-transparent hover:border-primary px-3.5 text-lg",
+        isActive && "bg-black hover:bg-black text-white hover:text-white"
+      )}
+    >
+      <Link href={href}>{children}</Link>
+    </Button>
+  );
 };
 
 export const Navbar = () => {
