@@ -1,9 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { Poppins } from "next/font/google";
+import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Nav } from "react-day-picker";
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -39,6 +42,8 @@ const NavbarItem = ({ href, children, isActive }: NavbarItemProps) => {
 };
 
 export const Navbar = () => {
+  const pathname = usePathname();
+
   return (
     <nav className="flex justify-between h-20 border-b font-medium bg-white">
       <Link
@@ -53,7 +58,11 @@ export const Navbar = () => {
 
       <div className="hidden lg:flex items-center gap-4">
         {navbarItems.map((item) => (
-          <NavbarItem key={item.href} href={item.href}>
+          <NavbarItem
+            key={item.href}
+            href={item.href}
+            isActive={item.href === pathname}
+          >
             {item.children}
           </NavbarItem>
         ))}
