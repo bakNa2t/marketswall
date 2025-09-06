@@ -1,11 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Poppins } from "next/font/google";
 import { usePathname } from "next/navigation";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { NavbarSidebar } from "./navbar-sidebar";
+
+import { cn } from "@/lib/utils";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -43,6 +46,7 @@ const NavbarItem = ({ href, children, isActive }: NavbarItemProps) => {
 
 export const Navbar = () => {
   const pathname = usePathname();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
     <nav className="flex justify-between h-20 border-b font-medium bg-white">
@@ -51,10 +55,16 @@ export const Navbar = () => {
         className="flex items-center
        pl-6"
       >
-        <span className={cn("text-5xl font-semibold", poppins.className)}>
-          Marketswall
+        <span className={cn("text-4xl font-semibold", poppins.className)}>
+          marketswall
         </span>
       </Link>
+
+      <NavbarSidebar
+        open={isSidebarOpen}
+        onOpenChange={setIsSidebarOpen}
+        items={navbarItems}
+      />
 
       <div className="hidden lg:flex items-center gap-4">
         {navbarItems.map((item) => (
