@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Poppins } from "next/font/google";
+import { MenuIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -91,6 +92,16 @@ export const Navbar = () => {
           className="h-full px-12 border-l border-t-0 border-b-0 border-r-0 rounded-none bg-black text-white hover:text-black hover:bg-pink-400 transition-colors text-lg"
         >
           <Link href="/sign-up">Start selling</Link>
+        </Button>
+      </div>
+
+      <div className="lg:hidden flex items-center justify-center">
+        <Button
+          variant="ghost"
+          className="size-12 border-transparent bg-white"
+          onClick={() => setIsSidebarOpen(true)}
+        >
+          <MenuIcon />
         </Button>
       </div>
     </nav>
