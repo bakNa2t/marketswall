@@ -1,6 +1,15 @@
+import configPromise from "@payload-config";
+import { CollectionSlug, getPayload } from "payload";
+
 import { Button } from "@/components/ui/button";
 
-export default function Home() {
+export default async function Home() {
+  const payload = await getPayload({ config: configPromise });
+
+  const data = await payload.find({
+    collection: "categories" as CollectionSlug,
+  });
+
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-[32px] row-start-2 items-center">
@@ -8,6 +17,8 @@ export default function Home() {
         <p>Find your own tenant here</p>
         <Button variant="elevated">Get started</Button>
       </main>
+
+      <div>{JSON.stringify(data, null, 2)}</div>
     </div>
   );
 }
