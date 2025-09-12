@@ -1,5 +1,5 @@
 import configPromise from "@payload-config";
-import { CollectionSlug, getPayload } from "payload";
+import { getPayload } from "payload";
 
 export const GET = async () => {
   const payload = await getPayload({
@@ -7,7 +7,7 @@ export const GET = async () => {
   });
 
   const data = await payload.find({
-    collection: "categories" as CollectionSlug,
+    collection: "categories",
   });
 
   return Response.json(data);

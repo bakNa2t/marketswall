@@ -1,4 +1,4 @@
-import type { CollectionConfig, CollectionSlug } from "payload";
+import type { CollectionConfig } from "payload";
 
 export const Categories: CollectionConfig = {
   slug: "categories",
@@ -22,13 +22,13 @@ export const Categories: CollectionConfig = {
     {
       name: "parent",
       type: "relationship",
-      relationTo: "categories" as CollectionSlug,
+      relationTo: "categories",
       hasMany: false,
     },
     {
       name: "subcategories",
       type: "join",
-      collection: "categories" as CollectionSlug,
+      collection: "categories",
       on: "parent",
       hasMany: true,
     },
