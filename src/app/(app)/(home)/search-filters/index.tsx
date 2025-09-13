@@ -1,3 +1,6 @@
+import { Categories } from "./categories";
+import { SearchInput } from "./search-input";
+
 interface SearchFiltersProps {
   data: any;
 }
@@ -5,7 +8,8 @@ interface SearchFiltersProps {
 export const SearchFilters = ({ data }: SearchFiltersProps) => {
   return (
     <div className="flex flex-col gap-4 w-full px-4 lg:px-12 py-8 border-b">
-      {JSON.stringify(data, null, 2)}
+      <SearchInput />
+      <Categories data={data} />
     </div>
   );
 };
