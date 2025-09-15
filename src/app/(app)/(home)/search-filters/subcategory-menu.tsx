@@ -1,4 +1,5 @@
 import { Category } from "@/payload-types";
+import Link from "next/link";
 
 interface SubcategoryMenuProps {
   category: Category;
@@ -31,7 +32,17 @@ export const SubcategoryMenu = ({
         style={{ backgroundColor }}
         className="w-60 text-black rounded-md overflow-hidden border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-x-[2px] -translate-y-[2px]"
       >
-        <p>Subcategory menu</p>
+        <div>
+          {category.subcategories?.map((subcategory: Category) => (
+            <Link
+              key={subcategory.slug}
+              href={"/"}
+              className="flex items-center justify-between w-full text-left p-4 underline font-medium hover:bg-black hover:text-white"
+            >
+              {subcategory.name}
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );
