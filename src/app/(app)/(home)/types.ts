@@ -1,5 +1,5 @@
 import { Category } from "@/payload-types";
 
-export type Customategory = Category & {
+export type CustomCategory = Category & {
   subcategories: Category[];
 };
