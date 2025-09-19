@@ -22,6 +22,7 @@ const HomeLayout = async ({ children }: HomeLayoutProps) => {
         exists: false,
       },
     },
+    sort: "name",
   });
 
   const formattedData = data.docs.map((doc) => ({
