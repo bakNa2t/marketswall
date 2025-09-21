@@ -9,7 +9,7 @@ interface CategoriesProps {
 }
 
 export const Categories = ({ data }: CategoriesProps) => {
-  const conteinerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
   const viewAllRef = useRef<HTMLDivElement>(null);
 
@@ -27,15 +27,15 @@ export const Categories = ({ data }: CategoriesProps) => {
 
   useEffect(() => {
     const calculateVivible = () => {
-      if (!conteinerRef.current || !measureRef.current || !viewAllRef.current)
+      if (!containerRef.current || !measureRef.current || !viewAllRef.current)
         return;
 
-      const containerWidth = conteinerRef.current.offsetWidth;
+      const containerWidth = containerRef.current.offsetWidth;
       const viewAllWidth = viewAllRef.current.offsetWidth;
       const aviableWidth = containerWidth - viewAllWidth;
 
       const items = Array.from(
-        conteinerRef.current.children
+        containerRef.current.children
       ) as HTMLDivElement[];
       let totalWidth = 0;
       let visible = 0;
@@ -53,7 +53,7 @@ export const Categories = ({ data }: CategoriesProps) => {
     };
 
     const resizeObserver = new ResizeObserver(calculateVivible);
-    resizeObserver.observe(conteinerRef.current!);
+    resizeObserver.observe(containerRef.current!);
 
     return () => {
       resizeObserver.disconnect();
@@ -62,13 +62,36 @@ export const Categories = ({ data }: CategoriesProps) => {
 
   return (
     <div className="relative w-full">
-      <div className="flex flex-wrap items-center">
+      {/* Hidden div to measure all items */}
+      <div
+        ref={measureRef}
+        className="absolute flex opacity-0 pointer-events-none"
+        style={{ position: "fixed", top: "-9999px", left: "-9999px" }}
+      >
         {data.map((category) => (
           <div key={category.id}>
             <CategoryDropdown
               category={category}
               isActive={activeCategory === category.slug}
               isNavigationHovered={false}
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Visible items */}
+      <div
+        ref={containerRef}
+        className="flex flex-wrap items-center"
+        onMouseEnter={() => setIsAnyHovered(true)}
+        onMouseLeave={() => setIsAnyHovered(false)}
+      >
+        {data.slice(0, visibleCount).map((category) => (
+          <div key={category.id}>
+            <CategoryDropdown
+              category={category}
+              isActive={activeCategory === category.slug}
+              isNavigationHovered={isAnyHovered}
             />
           </div>
         ))}
