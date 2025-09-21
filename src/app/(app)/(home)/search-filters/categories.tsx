@@ -1,7 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+"use client";
 
+import { useEffect, useRef, useState } from "react";
+import { ListFilterIcon } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 import { CategoryDropdown } from "./category-dropdown";
 
+import { cn } from "@/lib/utils";
 import { CustomCategory } from "../types";
 
 interface CategoriesProps {
@@ -95,6 +100,18 @@ export const Categories = ({ data }: CategoriesProps) => {
             />
           </div>
         ))}
+
+        <div ref={viewAllRef} className="shrink-0">
+          <Button
+            className={cn(
+              "h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-primary text-black",
+              activeCategoryHidden && !isAnyHovered && "bg-white border-primary"
+            )}
+          >
+            View All
+            <ListFilterIcon className="ml-2" />
+          </Button>
+        </div>
       </div>
     </div>
   );
