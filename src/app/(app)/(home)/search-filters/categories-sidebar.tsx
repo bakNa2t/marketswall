@@ -9,7 +9,7 @@ import {
 
 import { CustomCategory } from "../types";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronLeftIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 interface CategoriesSidebarProps {
   open: boolean;
@@ -51,6 +51,19 @@ export const CategoriesSidebar = ({
               Back
             </button>
           )}
+
+          {currentCategory.map((category) => (
+            <button
+              key={category.slug}
+              className="flex items-center justify-between w-full p-4 text-base font-medium text-left hover:bg-black hover:text-white hover:cursor-pointer"
+              onClick={() => {}}
+            >
+              {category.name}
+              {category.subcategories && category.subcategories.lenght > 0 && (
+                <ChevronRightIcon className="size-4" />
+              )}
+            </button>
+          ))}
         </ScrollArea>
       </SheetContent>
     </Sheet>
