@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 import {
   Sheet,
@@ -9,7 +11,6 @@ import {
 
 import { CustomCategory } from "../types";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 interface CategoriesSidebarProps {
   open: boolean;
@@ -22,6 +23,7 @@ export const CategoriesSidebar = ({
   onOpenChange,
   data,
 }: CategoriesSidebarProps) => {
+  const router = useRouter();
   const [parentCategories, setParentCategories] = useState<
     CustomCategory[] | null
   >(null);
@@ -29,6 +31,23 @@ export const CategoriesSidebar = ({
     useState<CustomCategory | null>(null);
 
   const currentCategory = parentCategories ?? data ?? [];
+
+  const handleCategoryClick = (category: CustomCategory) => {
+    if (category.subcategories && category.subcategories.length > 0) {
+      setParentCategories(category.subcategories as CustomCategory[]);
+      setSelectedCategory(category);
+    } else {
+      if (parentCategories && selectedCategory) {
+        router.push(`/${selectedCategory.slug}/${category.slug}`);
+      } else {
+        if (category.slug === "all") {
+          router.push("/");
+        } else {
+          router.push(`/${category.slug}`);
+        }
+      }
+    }
+  };
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -56,10 +75,10 @@ export const CategoriesSidebar = ({
             <button
               key={category.slug}
               className="flex items-center justify-between w-full p-4 text-base font-medium text-left hover:bg-black hover:text-white hover:cursor-pointer"
-              onClick={() => {}}
+              onClick={() => handleCategoryClick(category)}
             >
               {category.name}
-              {category.subcategories && category.subcategories.lenght > 0 && (
+              {category.subcategories && category.subcategories.length > 0 && (
                 <ChevronRightIcon className="size-4" />
               )}
             </button>
