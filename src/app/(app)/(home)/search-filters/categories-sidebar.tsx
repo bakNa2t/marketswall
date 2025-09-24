@@ -32,6 +32,8 @@ export const CategoriesSidebar = ({
 
   const currentCategory = parentCategories ?? data ?? [];
 
+  const backgroundColor = selectedCategory?.color || "white";
+
   const handleOpenChange = (open: boolean) => {
     setSelectedCategory(null);
     setParentCategories(null);
@@ -57,12 +59,19 @@ export const CategoriesSidebar = ({
     }
   };
 
+  const handleBackClick = () => {
+    if (parentCategories) {
+      setParentCategories(null);
+      setSelectedCategory(null);
+    }
+  };
+
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent
         side="left"
         className="p-0 transition-none"
-        style={{ backgroundColor: "white" }}
+        style={{ backgroundColor }}
       >
         <SheetHeader className="p-4 border-b">
           <SheetTitle>Categories</SheetTitle>
@@ -72,7 +81,7 @@ export const CategoriesSidebar = ({
           {parentCategories && (
             <button
               className="flex items-center w-full p-4 text-base font-medium text-left hover:bg-black hover:text-white hover:cursor-pointer"
-              onClick={() => {}}
+              onClick={handleBackClick}
             >
               <ChevronLeftIcon className="size-4 mr-2" />
               Back
