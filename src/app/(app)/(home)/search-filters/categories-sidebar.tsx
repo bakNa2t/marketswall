@@ -32,6 +32,12 @@ export const CategoriesSidebar = ({
 
   const currentCategory = parentCategories ?? data ?? [];
 
+  const handleOpenChange = (open: boolean) => {
+    setSelectedCategory(null);
+    setParentCategories(null);
+    onOpenChange(open);
+  };
+
   const handleCategoryClick = (category: CustomCategory) => {
     if (category.subcategories && category.subcategories.length > 0) {
       setParentCategories(category.subcategories as CustomCategory[]);
@@ -46,11 +52,13 @@ export const CategoriesSidebar = ({
           router.push(`/${category.slug}`);
         }
       }
+
+      handleOpenChange(false);
     }
   };
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent
         side="left"
         className="p-0 transition-none"
