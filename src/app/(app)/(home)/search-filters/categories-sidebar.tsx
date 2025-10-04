@@ -10,9 +10,9 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
-import { CustomCategory } from "../types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useTRPC } from "@/trpc/client";
+import { CategoriesGetManyOutput } from "@/modules/categories/types";
 
 interface CategoriesSidebarProps {
   open: boolean;
@@ -27,11 +27,11 @@ export const CategoriesSidebar = ({
   const { data } = useQuery(trpc.categories.getMany.queryOptions());
 
   const router = useRouter();
-  const [parentCategories, setParentCategories] = useState<
-    CustomCategory[] | null
+  const [parentCategories, setParentCategories] =
+    useState<CategoriesGetManyOutput | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<
+    CategoriesGetManyOutput[1] | null
   >(null);
-  const [selectedCategory, setSelectedCategory] =
-    useState<CustomCategory | null>(null);
 
   const currentCategory = parentCategories ?? data ?? [];
 
@@ -43,9 +43,9 @@ export const CategoriesSidebar = ({
     onOpenChange(open);
   };
 
-  const handleCategoryClick = (category: CustomCategory) => {
+  const handleCategoryClick = (category: CategoriesGetManyOutput[1]) => {
     if (category.subcategories && category.subcategories.length > 0) {
-      setParentCategories(category.subcategories as CustomCategory[]);
+      setParentCategories(category.subcategories as CategoriesGetManyOutput);
       setSelectedCategory(category);
     } else {
       if (parentCategories && selectedCategory) {
