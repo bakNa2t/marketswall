@@ -101,4 +101,8 @@ export const authRouter = createTRPCRouter({
 
       return data;
     }),
+  logout: baseProcedure.mutation(async () => {
+    const cookies = await getCookies();
+    cookies.delete(AUTH_COOKIE);
+  }),
 });
