@@ -44,6 +44,29 @@ export const authRouter = createTRPCRouter({
           password: input.password,
         },
       });
+
+      const data = await ctx.db.login({
+        collection: "users",
+        data: {
+          email: input.email,
+          password: input.password,
+        },
+      });
+
+      if (!data.token) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Invalid email or password",
+        });
+      }
+
+      const cookies = await getCookies();
+      cookies.set({
+        name: AUTH_COOKIE,
+        value: data.token,
+        httpOnly: true,
+        path: "/",
+      });
     }),
   login: baseProcedure
     .input(
