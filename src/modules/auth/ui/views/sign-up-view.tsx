@@ -109,11 +109,33 @@ export const SignUpView = () => {
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {/* password input */}
+            <FormField
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base">Password</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="password" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              size="lg"
+              variant="elevated"
+              className="bg-black text-white hover:bg-pink-400 hover:text-primary"
+            >
+              Create account
+            </Button>
           </form>
         </Form>
       </div>
