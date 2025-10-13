@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { z } from "zod";
+import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Poppins } from "next/font/google";
+import { useMutation } from "@tanstack/react-query";
 
 import {
   Form,
@@ -19,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
+import { useTRPC } from "@/trpc/client";
 import { registerSchema } from "../../schemas";
 
 const poppins = Poppins({
@@ -27,6 +30,15 @@ const poppins = Poppins({
 });
 
 export const SignUpView = () => {
+  const trpc = useTRPC();
+  const register = useMutation(
+    trpc.auth.register.mutationOptions({
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    })
+  );
+
   const form = useForm<z.infer<typeof registerSchema>>({
     mode: "all",
     resolver: zodResolver(registerSchema),
@@ -37,8 +49,8 @@ export const SignUpView = () => {
     },
   });
 
-  const onSubmint = (values: z.infer<typeof registerSchema>) => {
-    console.log(values);
+  const onSubmit = (values: z.infer<typeof registerSchema>) => {
+    register.mutate(values);
   };
 
   const username = form.watch("username");
@@ -51,7 +63,7 @@ export const SignUpView = () => {
       <div className="bg-[#f4f4f0] h-screen w-full lg:col-span-3 overflow-auto">
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmint)}
+            onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-8 p-4 lg:p-16"
           >
             <div className="flex items-center justify-between mb-8">
@@ -133,6 +145,7 @@ export const SignUpView = () => {
               size="lg"
               variant="elevated"
               className="bg-black text-white hover:bg-pink-400 hover:text-primary"
+              disabled={register.isPending}
             >
               Create account
             </Button>
