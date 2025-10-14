@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { z } from "zod";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Poppins } from "next/font/google";
@@ -30,11 +31,16 @@ const poppins = Poppins({
 });
 
 export const SignUpView = () => {
+  const router = useRouter();
+
   const trpc = useTRPC();
   const register = useMutation(
     trpc.auth.register.mutationOptions({
       onError: (error) => {
         toast.error(error.message);
+      },
+      onSuccess: () => {
+        router.push("/");
       },
     })
   );
