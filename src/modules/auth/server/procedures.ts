@@ -6,7 +6,7 @@ import { TRPCError } from "@trpc/server";
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 
 import { AUTH_COOKIE } from "../constants";
-import { registerSchema } from "../schemas";
+import { loginSchema, registerSchema } from "../schemas";
 
 export const authRouter = createTRPCRouter({
   session: baseProcedure.query(async ({ ctx }) => {
@@ -70,39 +70,32 @@ export const authRouter = createTRPCRouter({
         path: "/",
       });
     }),
-  login: baseProcedure
-    .input(
-      z.object({
-        email: z.string(),
-        password: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const data = await ctx.db.login({
-        collection: "users",
-        data: {
-          email: input.email,
-          password: input.password,
-        },
+  login: baseProcedure.input(loginSchema).mutation(async ({ ctx, input }) => {
+    const data = await ctx.db.login({
+      collection: "users",
+      data: {
+        email: input.email,
+        password: input.password,
+      },
+    });
+
+    if (!data.token) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Invalid email or password",
       });
+    }
 
-      if (!data.token) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "Invalid email or password",
-        });
-      }
+    const cookies = await getCookies();
+    cookies.set({
+      name: AUTH_COOKIE,
+      value: data.token,
+      httpOnly: true,
+      path: "/",
+    });
 
-      const cookies = await getCookies();
-      cookies.set({
-        name: AUTH_COOKIE,
-        value: data.token,
-        httpOnly: true,
-        path: "/",
-      });
-
-      return data;
-    }),
+    return data;
+  }),
   logout: baseProcedure.mutation(async () => {
     const cookies = await getCookies();
     cookies.delete(AUTH_COOKIE);
