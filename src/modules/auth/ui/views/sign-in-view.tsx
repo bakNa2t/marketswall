@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
-import { useTRPC } from "@/trpc/client";
+// import { useTRPC } from "@/trpc/client";
 import { loginSchema } from "../../schemas";
 
 const poppins = Poppins({
@@ -32,17 +32,30 @@ const poppins = Poppins({
 export const SignInView = () => {
   const router = useRouter();
 
-  const trpc = useTRPC();
-  const login = useMutation(
-    trpc.auth.login.mutationOptions({
-      onError: (error) => {
-        toast.error(error.message);
-      },
-      onSuccess: () => {
-        router.push("/");
-      },
-    })
-  );
+  const login = useMutation({
+    mutationFn: async (values: z.infer<typeof loginSchema>) => {
+      const response = await fetch("/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+
+      return response.json();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: () => {
+      router.push("/");
+    },
+  });
 
   const form = useForm<z.infer<typeof loginSchema>>({
     mode: "all",
