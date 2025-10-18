@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Poppins } from "next/font/google";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import {
   Form,
@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
-// import { useTRPC } from "@/trpc/client";
+import { useTRPC } from "@/trpc/client";
 import { loginSchema } from "../../schemas";
 
 const poppins = Poppins({
@@ -32,30 +32,21 @@ const poppins = Poppins({
 export const SignInView = () => {
   const router = useRouter();
 
-  const login = useMutation({
-    mutationFn: async (values: z.infer<typeof loginSchema>) => {
-      const response = await fetch("/api/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+  const trpc = useTRPC();
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message);
-      }
+  const queryClient = useQueryClient();
 
-      return response.json();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-    onSuccess: () => {
-      router.push("/");
-    },
-  });
+  const login = useMutation(
+    trpc.auth.login.mutationOptions({
+      onError: (error) => {
+        toast.error(error.message);
+      },
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(trpc.auth.session.queryFilter());
+        router.push("/");
+      },
+    })
+  );
 
   const form = useForm<z.infer<typeof loginSchema>>({
     mode: "all",
