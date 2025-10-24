@@ -5,6 +5,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { Categories } from "./categories";
 import { SearchInput } from "./search-input";
+import { BreadcrumbsNavigation } from "./breadcrumbs-navigation";
 
 import { useTRPC } from "@/trpc/client";
 import { DEFAULT_BG_COLOR } from "@/modules/home/constants";
@@ -40,6 +41,12 @@ export const SearchFilters = () => {
       <div className="hidden lg:block">
         <Categories data={data} />
       </div>
+
+      <BreadcrumbsNavigation
+        activeCategoryName={activeCategoryName}
+        activeSubcategoryName={activeSubcategoryName}
+        activeCategory={activeCategory}
+      />
     </div>
   );
 };
