@@ -12,7 +12,7 @@ import { Users } from "./collections/Users";
 import { Media } from "./collections/Media";
 import { Categories } from "./collections/Categories";
 // import { Orders } from "./collections/Orders";
-// import { Products } from "./collections/Products";
+import { Products } from "./collections/Products";
 // import { Reviews } from "./collections/Reviews";
 // import { Tags } from "./collections/Tags";
 // import { Tenants } from "./collections/Tenants";
@@ -36,7 +36,7 @@ export default buildConfig({
     Users,
     Media,
     Categories,
-    // Products,
+    Products,
     // Tags,
     // Tenants,
     // Orders,
