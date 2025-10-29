@@ -26,7 +26,7 @@ const CategoryPage = async ({ params }: CategoryPageProps) => {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <Suspense fallback={<ProductListSkeleton />}>
-        <ProductList />
+        <ProductList category={category} />
       </Suspense>
     </HydrationBoundary>
   );
