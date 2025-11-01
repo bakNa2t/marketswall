@@ -25,9 +25,19 @@ const CategoryPage = async ({ params }: CategoryPageProps) => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense fallback={<ProductListSkeleton />}>
-        <ProductList category={category} />
-      </Suspense>
+      <div className="flex gap-4 px-4 lg:px-12 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-6 xl:grid-cols-8 gap-y-6 gap-x-12">
+          <div className="lg:col-span-2 xl:col-span-2">
+            <div className="border p-2">Product filtres</div>
+          </div>
+
+          <div className="lg:col-span-4 xl:col-span-6">
+            <Suspense fallback={<ProductListSkeleton />}>
+              <ProductList category={category} />
+            </Suspense>
+          </div>
+        </div>
+      </div>
     </HydrationBoundary>
   );
 };
