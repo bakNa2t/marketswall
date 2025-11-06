@@ -35,6 +35,13 @@ const ProductFilter = ({ title, className, children }: ProductFiltersProps) => {
 export const ProductFilters = () => {
   const [filters, setFilters] = useProductFilters();
 
+  const onClear = () => {
+    setFilters({
+      minPrice: "",
+      maxPrice: "",
+    });
+  };
+
   const onChange = (key: keyof typeof filters, value: unknown) => {
     setFilters({
       ...filters,
@@ -47,7 +54,7 @@ export const ProductFilters = () => {
       <div className="flex items-center justify-between p-4 border-b">
         <p className="font-medium">Filters</p>
 
-        <button className="underline" onClick={() => {}} type="button">
+        <button className="underline" onClick={() => onClear()} type="button">
           Clear
         </button>
       </div>
