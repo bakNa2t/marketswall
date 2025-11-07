@@ -14,7 +14,7 @@ import { Categories } from "./collections/Categories";
 // import { Orders } from "./collections/Orders";
 import { Products } from "./collections/Products";
 // import { Reviews } from "./collections/Reviews";
-// import { Tags } from "./collections/Tags";
+import { Tags } from "./collections/Tags";
 // import { Tenants } from "./collections/Tenants";
 // import { isSuperAdmin } from "./lib/access";
 // import { Config } from "./payload-types";
@@ -37,7 +37,7 @@ export default buildConfig({
     Media,
     Categories,
     Products,
-    // Tags,
+    Tags,
     // Tenants,
     // Orders,
     // Reviews,
