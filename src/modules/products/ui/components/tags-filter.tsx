@@ -1,9 +1,10 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { LoaderIcon } from "lucide-react";
+
+import { Checkbox } from "@/components/ui/checkbox";
 
 import { useTRPC } from "@/trpc/client";
 import { DEFAULT_LIMIT } from "@/constants";
-import { LoaderIcon } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
 
 interface TagsFilterProps {
   value?: string[] | null;
@@ -45,6 +46,16 @@ export const TagsFilter = ({ value, onChange }: TagsFilterProps) => {
             </div>
           ))
         )
+      )}
+
+      {hasNextPage && (
+        <button
+          disabled={isFetchingNextPage}
+          onClick={() => fetchNextPage()}
+          className="justify-start underline font-medium text-start disabled:opacity-50"
+        >
+          Load more...
+        </button>
       )}
     </div>
   );
