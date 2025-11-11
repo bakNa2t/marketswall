@@ -87,7 +87,7 @@ export const ProductFilters = () => {
       <ProductFilter title="Tags" className="border-b-0">
         <TagsFilter
           value={filters.tags}
-          onChage={(value) => onChange("tags", value)}
+          onChange={(value) => onChange("tags", value)}
         />
       </ProductFilter>
     </div>
