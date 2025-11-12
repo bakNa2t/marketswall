@@ -1,4 +1,4 @@
-import { string, z } from "zod";
+import { z } from "zod";
 import type { Where } from "payload";
 import { Category } from "@/payload-types";
 
@@ -8,9 +8,10 @@ export const productsRouter = createTRPCRouter({
   getMany: baseProcedure
     .input(
       z.object({
-        category: string().nullable().optional(),
-        minPrice: string().nullable().optional(),
-        maxPrice: string().nullable().optional(),
+        category: z.string().nullable().optional(),
+        minPrice: z.string().nullable().optional(),
+        maxPrice: z.string().nullable().optional(),
+        tags: z.array(z.string()).nullable().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -67,6 +68,12 @@ export const productsRouter = createTRPCRouter({
             in: [parentCategory.slug, ...subcategoriesSlugs],
           };
         }
+      }
+
+      if (input.tags && input.tags.length > 0) {
+        where["tags.name"] = {
+          in: input.tags,
+        };
       }
 
       const data = await ctx.db.find({
