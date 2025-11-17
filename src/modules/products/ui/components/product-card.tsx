@@ -9,7 +9,7 @@ interface ProductCardProps {
   authorImageUrl?: string | null;
   reviewRating: number;
   reviewCount: number;
-  price: string;
+  price: number;
 }
 
 export const ProductCard = ({
@@ -29,9 +29,25 @@ export const ProductCard = ({
           <Image
             alt={name}
             fill
-            src={imageUrl || ""}
+            src={imageUrl || "/placeholder.png"}
             className="object-cover"
           />
+        </div>
+
+        <div className="flex flex-col flex-1 gap-3 p-4 border-y">
+          <h2 className="text-lg font-medium line-clamp-4">{name}</h2>
+          <div className="flex items-center gap-2" onClick={() => {}}>
+            {authorImageUrl && (
+              <Image
+                alt={authorUsername}
+                width={16}
+                height={16}
+                src={authorImageUrl}
+                className="shrink-0 rounded-full border size-[16px]"
+              />
+            )}
+            <p className="text-sm underline font-medium">{authorUsername}</p>
+          </div>
         </div>
       </div>
     </Link>
