@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { StarIcon } from "lucide-react";
 
 interface ProductCardProps {
   id: string;
@@ -48,6 +49,15 @@ export const ProductCard = ({
             )}
             <p className="text-sm underline font-medium">{authorUsername}</p>
           </div>
+
+          {reviewCount > 0 && (
+            <div className="flex items-center gap-1">
+              <StarIcon className="size-3.5 fill-black" />
+              <p className="text-sm font-medium">
+                {reviewRating} ({reviewCount})
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </Link>
