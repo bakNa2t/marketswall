@@ -1,13 +1,14 @@
 "use client";
 
+import { InboxIcon } from "lucide-react";
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 
+import { Button } from "@/components/ui/button";
 import { ProductCard } from "./product-card";
 
-import { useTRPC } from "@/trpc/client";
 import { DEFAULT_LIMIT } from "@/constants";
+import { useTRPC } from "@/trpc/client";
 import { useProductFilters } from "../../hooks/use-product-filters";
-import { Button } from "@/components/ui/button";
 
 interface ProductListProps {
   category?: string;
@@ -28,6 +29,15 @@ export const ProductList = ({ category }: ProductListProps) => {
         }
       )
     );
+
+  if (data.pages?.[0]?.docs.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-y-4 w-full p-8 border border-black border-dashed bg-white rounded-lg">
+        <InboxIcon />
+        <p className="text-lg font-medium">No products found</p>
+      </div>
+    );
+  }
 
   return (
     <>
