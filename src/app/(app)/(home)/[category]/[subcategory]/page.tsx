@@ -5,6 +5,7 @@ import { ProductListView } from "@/modules/products/ui/views/product-list-view";
 
 import { getQueryClient, trpc } from "@/trpc/server";
 import { loadProductFilters } from "@/modules/products/search-params";
+import { DEFAULT_LIMIT } from "@/constants";
 
 interface SubcategoryPageProps {
   params: Promise<{
@@ -22,8 +23,12 @@ const SubcategoryPage = async ({
 
   const queryClient = getQueryClient();
 
-  void queryClient.prefetchQuery(
-    trpc.products.getMany.queryOptions({ category: subcategory, ...filters })
+  void queryClient.prefetchInfiniteQuery(
+    trpc.products.getMany.infiniteQueryOptions({
+      category: subcategory,
+      ...filters,
+      limit: DEFAULT_LIMIT,
+    })
   );
 
   return (
