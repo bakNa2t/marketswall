@@ -5,8 +5,8 @@ import path from "path";
 import { buildConfig } from "payload";
 import sharp from "sharp";
 import { fileURLToPath } from "url";
+import { multiTenantPlugin } from "@payloadcms/plugin-multi-tenant";
 // import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
-// import { multiTenantPlugin } from "@payloadcms/plugin-multi-tenant";
 
 import { Users } from "./collections/Users";
 import { Media } from "./collections/Media";
@@ -15,7 +15,7 @@ import { Categories } from "./collections/Categories";
 import { Products } from "./collections/Products";
 // import { Reviews } from "./collections/Reviews";
 import { Tags } from "./collections/Tags";
-// import { Tenants } from "./collections/Tenants";
+import { Tenants } from "./collections/Tenants";
 // import { isSuperAdmin } from "./lib/access";
 // import { Config } from "./payload-types";
 
@@ -38,7 +38,7 @@ export default buildConfig({
     Categories,
     Products,
     Tags,
-    // Tenants,
+    Tenants,
     // Orders,
     // Reviews,
   ],
@@ -53,16 +53,18 @@ export default buildConfig({
   sharp,
   plugins: [
     payloadCloudPlugin(),
-    // multiTenantPlugin<Config>({
-    //   collections: {
-    //     products: {},
-    //     media: {},
-    //   },
-    //   tenantsArrayField: {
-    //     includeDefaultField: false,
-    //   },
-    //   userHasAccessToAllTenants: (user) => isSuperAdmin(user),
-    // }),
+    multiTenantPlugin<Config>({
+      collections: {
+        products: {},
+        media: {},
+      },
+      tenantsArrayField: {
+        includeDefaultField: false,
+      },
+      userHasAccessToAllTenants: (user) =>
+        Boolean(user?.roles?.includes("super-admin")),
+      // userHasAccessToAllTenants: (user) => isSuperAdmin(user),
+    }),
     // vercelBlobStorage({
     //   enabled: true,
     //   collections: {
