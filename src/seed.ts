@@ -140,6 +140,15 @@ const categories = [
 const seed = async () => {
   const payload = await getPayload({ config });
 
+  const adminTenant = await payload.create({
+    collection: "tenants",
+    data: {
+      name: "admin",
+      slug: "admin",
+      stripeAccountId: "admin",
+    },
+  });
+
   // Create admin user
   await payload.create({
     collection: "users",
@@ -148,6 +157,11 @@ const seed = async () => {
       password: "demo",
       roles: ["super-admin"],
       username: "admin",
+      tenants: [
+        {
+          tenant: adminTenant.id,
+        },
+      ],
     },
   });
 
