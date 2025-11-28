@@ -50,7 +50,7 @@ export const ProductList = ({ category }: ProductListProps) => {
               id={product.id}
               name={product.name}
               imageUrl={product.image?.url}
-              authorUsername="Maker"
+              authorUsername={product.tenant.name}
               authorImageUrl={undefined}
               reviewRating={4}
               reviewCount={5}
