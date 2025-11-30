@@ -12,16 +12,17 @@ import { useProductFilters } from "../../hooks/use-product-filters";
 
 interface ProductListProps {
   category?: string;
+  tenantSlug?: string;
 }
 
-export const ProductList = ({ category }: ProductListProps) => {
+export const ProductList = ({ category, tenantSlug }: ProductListProps) => {
   const [filters] = useProductFilters();
 
   const trpc = useTRPC();
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useSuspenseInfiniteQuery(
       trpc.products.getMany.infiniteQueryOptions(
-        { category, ...filters, limit: DEFAULT_LIMIT },
+        { category, ...filters, tenantSlug, limit: DEFAULT_LIMIT },
         {
           getNextPageParam: (lastPage) => {
             return lastPage.docs.length > 0 ? lastPage.nextPage : undefined;
