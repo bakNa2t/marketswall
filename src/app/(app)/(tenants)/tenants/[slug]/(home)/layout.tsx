@@ -10,7 +10,9 @@ const Layout = ({ children, params }: LayoutProps) => {
   return (
     <div className="flex flex-col min-h-screen bg-[#f4f4f0]">
       <Navbar />
-      {children}
+      <div className="flex-1 ">
+        <div className="max-w-(--breakpoint-xl) mx-auto">{children}</div>
+      </div>
       <Footer />
     </div>
   );
