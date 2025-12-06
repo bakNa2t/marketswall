@@ -7,11 +7,13 @@ import { ProductList, ProductListSkeleton } from "../components/product-list";
 interface ProductListViewProps {
   category?: string;
   tenantSlug?: string;
+  narrowView?: boolean;
 }
 
 export const ProductListView = ({
   category,
   tenantSlug,
+  narrowView,
 }: ProductListViewProps) => {
   return (
     <div className="flex gap-4 px-4 lg:px-12 py-8">
@@ -26,8 +28,12 @@ export const ProductListView = ({
         </div>
 
         <div className="lg:col-span-4 xl:col-span-6">
-          <Suspense fallback={<ProductListSkeleton />}>
-            <ProductList category={category} tenantSlug={tenantSlug} />
+          <Suspense fallback={<ProductListSkeleton narrowView={narrowView} />}>
+            <ProductList
+              category={category}
+              tenantSlug={tenantSlug}
+              narrowView={narrowView}
+            />
           </Suspense>
         </div>
       </div>
