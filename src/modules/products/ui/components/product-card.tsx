@@ -1,13 +1,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { StarIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React from "react";
+import { generateTenantURL } from "@/lib/utils";
 
 interface ProductCardProps {
   id: string;
   name: string;
   imageUrl?: string | null;
-  authorUsername: string;
-  authorImageUrl?: string | null;
+  tenantSlug: string;
+  tenantImageUrl?: string | null;
   reviewRating: number;
   reviewCount: number;
   price: number;
@@ -17,12 +20,20 @@ export const ProductCard = ({
   id,
   name,
   imageUrl,
-  authorUsername,
-  authorImageUrl,
+  tenantSlug,
+  tenantImageUrl,
   reviewRating,
   reviewCount,
   price,
 }: ProductCardProps) => {
+  const router = useRouter();
+
+  const handleUserClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push(generateTenantURL(tenantSlug));
+  };
+
   return (
     <Link href={`/products/${id}`}>
       <div className="flex flex-col border rounded-md bg-white h-full oferflow-hidden hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow">
@@ -37,17 +48,17 @@ export const ProductCard = ({
 
         <div className="flex flex-col flex-1 gap-3 p-4 border-y">
           <h2 className="text-lg font-medium line-clamp-4">{name}</h2>
-          <div className="flex items-center gap-2" onClick={() => {}}>
-            {authorImageUrl && (
+          <div className="flex items-center gap-2" onClick={handleUserClick}>
+            {tenantImageUrl && (
               <Image
-                alt={authorUsername}
+                alt={tenantSlug}
                 width={16}
                 height={16}
-                src={authorImageUrl}
+                src={tenantImageUrl}
                 className="shrink-0 rounded-full border size-[16px]"
               />
             )}
-            <p className="text-sm underline font-medium">{authorUsername}</p>
+            <p className="text-sm underline font-medium">{tenantSlug}</p>
           </div>
 
           {reviewCount > 0 && (
