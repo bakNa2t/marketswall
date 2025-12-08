@@ -1,6 +1,8 @@
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
+import { ProductView } from "@/modules/products/ui/views/product-view";
+
 interface ProductIdPageProps {
   params: Promise<{ productId: string; slug: string }>;
 }
@@ -9,7 +11,7 @@ const ProductIdPage = async ({ params }: ProductIdPageProps) => {
   const { productId, slug } = await params;
 
   const queryClient = getQueryClient();
-  void queryClient.prefetchQuery(trpc.products.getOne.queryOptions({ slug }));
+  void queryClient.prefetchQuery(trpc.tenants.getOne.queryOptions({ slug }));
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
