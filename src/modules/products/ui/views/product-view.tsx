@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useTRPC } from "@/trpc/client";
+import Link from "next/link";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { formatCurrency } from "@/lib/utils";
+import { useTRPC } from "@/trpc/client";
+import { formatCurrency, generateTenantURL } from "@/lib/utils";
 
 interface ProductViewProps {
   productId: string;
@@ -44,7 +45,29 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
                 </div>
               </div>
 
-              <div></div>
+              <div className="flex items-center justify-center lg:border-r">
+                <Link
+                  href={generateTenantURL(tenantSlug)}
+                  className="flex items-center gap-2"
+                >
+                  {data.tenant.image?.url && (
+                    <Image
+                      src={data.tenant.image.url}
+                      alt={data.tenant.name}
+                      width={20}
+                      height={20}
+                      className="rounded-full border shrink-0 size-[20px]"
+                    />
+                  )}
+                  <p className="text-base font-medium underline">
+                    {data.tenant.name}
+                  </p>
+                </Link>
+              </div>
+
+              <div className="hidden lg:flex items-center justify-center px-6 py-4">
+                <StarRaiting />
+              </div>
             </div>
           </div>
         </div>
