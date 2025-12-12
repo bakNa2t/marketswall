@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
+import { StarRating } from "@/components/star-rating";
+
 import { useTRPC } from "@/trpc/client";
 import { formatCurrency, generateTenantURL } from "@/lib/utils";
 
@@ -66,7 +68,7 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
               </div>
 
               <div className="hidden lg:flex items-center justify-center px-6 py-4">
-                <StarRaiting />
+                <StarRating rating={4} iconClassName="size-4" />
               </div>
             </div>
           </div>
