@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { LinkIcon } from "lucide-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
+import { Button } from "@/components/ui/button";
 import { StarRating } from "@/components/star-rating";
 
 import { useTRPC } from "@/trpc/client";
@@ -71,23 +73,50 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
                 <StarRating rating={4} iconClassName="size-4" />
               </div>
             </div>
-          </div>
 
-          <div className="block lg:hidden px-6 py-4 items-center justify-center border-b">
-            <div className="flex items-center gap-1">
-              <StarRating rating={4} iconClassName="size-4" />
-              <p className="text-base font-medium">{5} ratings</p>
+            <div className="block lg:hidden px-6 py-4 items-center justify-center border-b">
+              <div className="flex items-center gap-1">
+                <StarRating rating={4} iconClassName="size-4" />
+                <p className="text-base font-medium">{5} ratings</p>
+              </div>
+            </div>
+
+            <div className="p-6">
+              {data.description ? (
+                <p className="text-muted-foreground">{data.description}</p>
+              ) : (
+                <p className="font-medium text-muted-foreground">
+                  No description provided
+                </p>
+              )}
             </div>
           </div>
 
-          <div className="p-6">
-            {data.description ? (
-              <p className="text-muted-foreground">{data.description}</p>
-            ) : (
-              <p className="font-medium text-muted-foreground">
-                No description provided
-              </p>
-            )}
+          <div className="col-span-2">
+            <div className="border-t lg:border-t-0 lg:border-l h-full">
+              <div className="flex flex-col gap-4 p-6 border-b">
+                <div className="flex flex-row items-center gap-2">
+                  <Button variant="elevated" className="flex-1 bg-pink-400">
+                    Add to cart
+                  </Button>
+
+                  <Button
+                    variant="elevated"
+                    className="size-12"
+                    onClick={() => {}}
+                    disabled={false}
+                  >
+                    <LinkIcon />
+                  </Button>
+                </div>
+
+                <p className="text-center font-medium">
+                  {data.refundPolicy === "no-refunds"
+                    ? "No refunds"
+                    : `${data.refundPolicy} money back guarantee`}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
