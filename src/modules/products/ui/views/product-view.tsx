@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { LinkIcon } from "lucide-react";
+import { LinkIcon, StarIcon } from "lucide-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
@@ -115,6 +115,18 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
                     ? "No refunds"
                     : `${data.refundPolicy} money back guarantee`}
                 </p>
+              </div>
+
+              <div className="p-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-medium">Ratings</h3>
+
+                  <div className="flex items-center gap-x-1 font-medium">
+                    <StarIcon className="size-4 fill-black" />
+                    <p>({5})</p>
+                    <p className="text-base">{5} ratings</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
