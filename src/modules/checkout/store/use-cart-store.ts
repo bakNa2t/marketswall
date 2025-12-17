@@ -30,6 +30,33 @@ export const useCartStore = create<CartState>()(
             },
           },
         })),
+      removeProduct: (tenantSlug, productId) =>
+        set((state) => ({
+          tenantCarts: {
+            ...state.tenantCarts,
+            [tenantSlug]: {
+              productIds:
+                state.tenantCarts[tenantSlug]?.productIds.filter(
+                  (id) => id !== productId
+                ) || [],
+            },
+          },
+        })),
+      clearCart: (tenantSlug) =>
+        set((state) => ({
+          tenantCarts: {
+            ...state.tenantCarts,
+            [tenantSlug]: {
+              productIds: [],
+            },
+          },
+        })),
+      clearAllCarts: () =>
+        set({
+          tenantCarts: {},
+        }),
+      getCartByTenant: (tenantSlug) =>
+        get().tenantCarts[tenantSlug]?.productIds || [],
     }),
     {
       name: "marketswall-cart",
