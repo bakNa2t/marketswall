@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import { useTRPC } from "@/trpc/client";
 import { useCart } from "../../hooks/use-cart";
@@ -23,6 +24,7 @@ export const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
   useEffect(() => {
     if (error?.data?.code === "NOT_FOUND") {
       clearAllCarts();
+      toast.warning("Invalid products found, cart cleared");
     }
   }, [error, clearAllCarts]);
 
