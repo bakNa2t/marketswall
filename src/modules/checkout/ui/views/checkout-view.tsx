@@ -3,6 +3,10 @@
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { InboxIcon } from "lucide-react";
+
+import { CheckoutItem } from "../components/checkout-item";
+import { CheckoutSidebar } from "../components/checkout-sidebar";
 
 import { useTRPC } from "@/trpc/client";
 import { useCart } from "../../hooks/use-cart";
@@ -29,6 +33,15 @@ export const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
     }
   }, [error, clearAllCarts]);
 
+  if (!data || data.docs.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-y-4 w-full p-8 border border-black border-dashed bg-white rounded-lg">
+        <InboxIcon />
+        <p className="text-lg font-medium">No products found</p>
+      </div>
+    );
+  }
+
   return (
     <div className="pt-4 lg:pt-16 px-4 lg:px-12">
       <div className="grid grid-cols-1 lg:grid-cols-7 gap-4 lg:gap-16">
@@ -37,7 +50,6 @@ export const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
             {data?.docs.map((product, index) => (
               <CheckoutItem
                 key={product.id}
-                id={product.id}
                 isLast={index === data.docs.length - 1}
                 imageUrl={product.image?.url}
                 name={product.name}
@@ -51,7 +63,14 @@ export const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
           </div>
         </div>
 
-        <div className="lg:col-span-3">Checkout sidebar</div>
+        <div className="lg:col-span-3">
+          <CheckoutSidebar
+            total={data?.totalPrice}
+            onCheckout={() => {}}
+            isCanceled={false}
+            isPending={false}
+          />
+        </div>
       </div>
     </div>
   );
