@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { InboxIcon } from "lucide-react";
+import { InboxIcon, LoaderIcon } from "lucide-react";
 
 import { CheckoutItem } from "../components/checkout-item";
 import { CheckoutSidebar } from "../components/checkout-sidebar";
@@ -20,7 +20,7 @@ export const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
   const { productIds, removeProduct, clearAllCarts } = useCart(tenantSlug);
 
   const trpc = useTRPC();
-  const { data, error } = useQuery(
+  const { data, error, isLoading } = useQuery(
     trpc.checkout.getProducts.queryOptions({
       ids: productIds,
     })
@@ -33,11 +33,23 @@ export const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
     }
   }, [error, clearAllCarts]);
 
-  if (!data || data.docs.length === 0) {
+  if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center gap-y-4 w-full p-8 border border-black border-dashed bg-white rounded-lg">
-        <InboxIcon />
-        <p className="text-lg font-medium">No products found</p>
+      <div className="pt-4 lg:pt-16 px-4 lg:px-12">
+        <div className="flex flex-col items-center justify-center gap-y-4 w-full p-8 border border-black border-dashed bg-white rounded-lg">
+          <LoaderIcon className="text-muted-foreground animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
+  if (data?.totalDocs === 0) {
+    return (
+      <div className="pt-4 lg:pt-16 px-4 lg:px-12">
+        <div className="flex flex-col items-center justify-center gap-y-4 w-full p-8 border border-black border-dashed bg-white rounded-lg">
+          <InboxIcon />
+          <p className="text-lg font-medium">No products found</p>
+        </div>
       </div>
     );
   }
@@ -65,7 +77,7 @@ export const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
 
         <div className="lg:col-span-3">
           <CheckoutSidebar
-            total={data?.totalPrice}
+            total={data?.totalPrice || 0}
             onCheckout={() => {}}
             isCanceled={false}
             isPending={false}
