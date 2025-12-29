@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { InboxIcon, LoaderIcon } from "lucide-react";
 
@@ -23,6 +23,13 @@ export const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
   const { data, error, isLoading } = useQuery(
     trpc.checkout.getProducts.queryOptions({
       ids: productIds,
+    })
+  );
+
+  const purchase = useMutation(
+    trpc.checkout.purchase.mutationOptions({
+      onSuccess: () => {},
+      onError: () => {},
     })
   );
 
@@ -78,9 +85,9 @@ export const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
         <div className="lg:col-span-3">
           <CheckoutSidebar
             total={data?.totalPrice || 0}
-            onCheckout={() => {}}
+            onPurchase={() => purchase.mutate({ tenantSlug, productIds })}
             isCanceled={false}
-            isPending={false}
+            disabled={purchase.isPending}
           />
         </div>
       </div>
