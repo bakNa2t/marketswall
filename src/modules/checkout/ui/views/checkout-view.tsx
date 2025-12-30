@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { InboxIcon, LoaderIcon } from "lucide-react";
@@ -11,13 +12,17 @@ import { CheckoutSidebar } from "../components/checkout-sidebar";
 import { useTRPC } from "@/trpc/client";
 import { useCart } from "../../hooks/use-cart";
 import { generateTenantURL } from "@/lib/utils";
+import { useCheckoutStates } from "../../hooks/use-checkout-states";
 
 interface CheckoutViewProps {
   tenantSlug: string;
 }
 
 export const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
-  const { productIds, removeProduct, clearAllCarts } = useCart(tenantSlug);
+  const router = useRouter();
+  const [states, setStates] = useCheckoutStates();
+  const { productIds, removeProduct, clearAllCarts, clearCart } =
+    useCart(tenantSlug);
 
   const trpc = useTRPC();
   const { data, error, isLoading } = useQuery(
@@ -34,11 +39,18 @@ export const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
   );
 
   useEffect(() => {
+    if (states.success) {
+      clearCart();
+      router.push("/products");
+    }
+  }, [states.success, clearCart, router]);
+
+  useEffect(() => {
     if (error?.data?.code === "NOT_FOUND") {
-      clearAllCarts();
+      clearCart();
       toast.warning("Invalid products found, cart cleared");
     }
-  }, [error, clearAllCarts]);
+  }, [error, clearCart]);
 
   if (isLoading) {
     return (
@@ -86,7 +98,7 @@ export const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
           <CheckoutSidebar
             total={data?.totalPrice || 0}
             onPurchase={() => purchase.mutate({ tenantSlug, productIds })}
-            isCanceled={false}
+            isCanceled={states.cancel}
             disabled={purchase.isPending}
           />
         </div>
