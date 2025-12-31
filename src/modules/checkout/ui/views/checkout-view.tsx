@@ -33,17 +33,29 @@ export const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
 
   const purchase = useMutation(
     trpc.checkout.purchase.mutationOptions({
-      onSuccess: () => {},
-      onError: () => {},
+      onMutate: () => {
+        setStates({ success: false, cancel: false });
+      },
+      onSuccess: (data) => {
+        window.location.href = data.url;
+      },
+      onError: (error) => {
+        if (error.data?.code === "UNAUTHORIZED") {
+          router.push("/sign-in");
+        }
+
+        toast.error(error.message);
+      },
     })
   );
 
   useEffect(() => {
     if (states.success) {
+      setStates({ success: false, cancel: false });
       clearCart();
       router.push("/products");
     }
-  }, [states.success, clearCart, router]);
+  }, [states.success, clearCart, router, setStates]);
 
   useEffect(() => {
     if (error?.data?.code === "NOT_FOUND") {
