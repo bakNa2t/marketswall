@@ -72,9 +72,32 @@ export async function POST(req: Request) {
             throw new Error("Line items not found");
           }
 
-          const line_items = expandedSession.line_items
+          const lineItems = expandedSession.line_items
             .data as ExpandedLineItem[];
+
+          for (const item of lineItems) {
+            await payload.create({
+              collection: "orders",
+              data: {
+                stripeCheckoutSessionId: data.id,
+                user: user.id,
+                product: item.price.product.metadata.id,
+                name: item.price.product.name,
+              },
+            });
+          }
+          break;
+
+          defailt: throw new Error(`Unhandled event: ${event.type}`);
       }
-    } catch {}
+    } catch (error) {
+      console.log(error);
+      return NextResponse.json(
+        { message: "Webhook handler failed" },
+        { status: 500 }
+      );
+    }
   }
+
+  return NextResponse.json({ message: "Received" }, { status: 200 });
 }
