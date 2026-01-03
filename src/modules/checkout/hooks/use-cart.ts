@@ -1,4 +1,6 @@
 import { useCallback } from "react";
+import { useShalow } from "zustand/react/shallow";
+
 import { useCartStore } from "../store/use-cart-store";
 
 export const useCart = (tenantSlug: string) => {
@@ -8,7 +10,7 @@ export const useCart = (tenantSlug: string) => {
   const clearAllCarts = useCartStore((state) => state.clearAllCarts);
 
   const productIds = useCartStore(
-    (state) => state.tenantCarts[tenantSlug]?.productIds || []
+    useShalow((state) => state.tenantCarts[tenantSlug]?.productIds || [])
   );
 
   const toggleProduct = useCallback(
@@ -22,13 +24,16 @@ export const useCart = (tenantSlug: string) => {
     [addProduct, removeProduct, productIds, tenantSlug]
   );
 
-  const isProductInCart = (productId: string) => {
-    return productIds.includes(productId);
-  };
+  const isProductInCart = useCallback(
+    (productId: string) => {
+      return productIds.includes(productId);
+    },
+    [productIds]
+  );
 
-  const clearTenantCart = () => {
+  const clearTenantCart = useCallback(() => {
     clearCart(tenantSlug);
-  };
+  }, [clearCart, tenantSlug]);
 
   return {
     productIds,
