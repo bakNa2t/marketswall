@@ -4,7 +4,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { LibraryView } from "@/modules/library/ui/views/library-view";
 import { DEFAULT_LIMIT } from "@/constants";
 
-const Page = () => {
+const Page = async () => {
   const queryClient = getQueryClient();
   void queryClient.prefetchInfiniteQuery(
     trpc.library.getMany.infiniteQueryOptions({
