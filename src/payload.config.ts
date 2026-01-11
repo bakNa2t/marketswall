@@ -13,7 +13,7 @@ import { Media } from "./collections/Media";
 import { Categories } from "./collections/Categories";
 import { Orders } from "./collections/Orders";
 import { Products } from "./collections/Products";
-// import { Reviews } from "./collections/Reviews";
+import { Reviews } from "./collections/Reviews";
 import { Tags } from "./collections/Tags";
 import { Tenants } from "./collections/Tenants";
 // import { isSuperAdmin } from "./lib/access";
@@ -40,7 +40,7 @@ export default buildConfig({
     Tags,
     Tenants,
     Orders,
-    // Reviews,
+    Reviews,
   ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
