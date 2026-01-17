@@ -3,7 +3,15 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Form } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
 
 import { ReviewsGetOneOutput } from "@/modules/reviews/types";
 
@@ -41,7 +49,48 @@ export const ReviewForm = ({ productId, initialData }: ReviewFormProps) => {
         <p className="font-medium">
           {isPreview ? "Your rating" : "Liked it? Give it a rating"}
         </p>
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Textarea
+                  {...field}
+                  placeholder="Want to leave a written review?"
+                  disabled={isPreview}
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {!isPreview && (
+          <Button
+            variant="elevated"
+            type="submit"
+            size="lg"
+            className="w-fit bg-black text-white hover:bg-pink-400 hover:text-primary"
+          >
+            {initialData ? "Update review" : "Post review"}
+          </Button>
+        )}
       </form>
+
+      {isPreview && (
+        <Button
+          variant="elevated"
+          type="button"
+          size="lg"
+          className="w-fit bg-black text-white hover:bg-pink-400 hover:text-primary"
+          onClick={() => setIsPreview(false)}
+        >
+          Edit
+        </Button>
+      )}
     </Form>
   );
 };
