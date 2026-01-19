@@ -15,6 +15,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { StarPicker } from "@/components/star-picker";
 
 import { ReviewsGetOneOutput } from "@/modules/reviews/types";
+import { useTRPC } from "@/trpc/client";
+import { useMutation } from "@tanstack/react-query";
 
 interface ReviewFormProps {
   productId: string;
@@ -29,6 +31,21 @@ const formSchema = z.object({
 export const ReviewForm = ({ productId, initialData }: ReviewFormProps) => {
   const [isPreview, setIsPreview] = useState(!!initialData);
 
+  const trpc = useTRPC();
+  const createReview = useMutation(
+    trpc.reviews.create.mutationOptions({
+      onSuccess: () => {},
+      onError: () => {},
+    }),
+  );
+
+  const updateReview = useMutation(
+    trpc.reviews.update.mutationOptions({
+      onSuccess: () => {},
+      onError: () => {},
+    }),
+  );
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,8 +54,20 @@ export const ReviewForm = ({ productId, initialData }: ReviewFormProps) => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    if (initialData) {
+      updateReview.mutate({
+        reviewId: initialData.id,
+        rating: values.rating,
+        description: values.description,
+      });
+    } else {
+      createReview.mutate({
+        productId,
+        rating: values.rating,
+        description: values.description,
+      });
+    }
   };
 
   return (
