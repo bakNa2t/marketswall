@@ -1,7 +1,9 @@
 import { z } from "zod";
+import { toast } from "sonner";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,9 +16,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { StarPicker } from "@/components/star-picker";
 
-import { ReviewsGetOneOutput } from "@/modules/reviews/types";
 import { useTRPC } from "@/trpc/client";
-import { useMutation } from "@tanstack/react-query";
+import { ReviewsGetOneOutput } from "@/modules/reviews/types";
 
 interface ReviewFormProps {
   productId: string;
@@ -32,17 +33,37 @@ export const ReviewForm = ({ productId, initialData }: ReviewFormProps) => {
   const [isPreview, setIsPreview] = useState(!!initialData);
 
   const trpc = useTRPC();
+  const queryClient = useQueryClient();
+
   const createReview = useMutation(
     trpc.reviews.create.mutationOptions({
-      onSuccess: () => {},
-      onError: () => {},
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.reviews.getOne.queryOptions({
+            productId,
+          }),
+        );
+        setIsPreview(true);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
     }),
   );
 
   const updateReview = useMutation(
     trpc.reviews.update.mutationOptions({
-      onSuccess: () => {},
-      onError: () => {},
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.reviews.getOne.queryOptions({
+            productId,
+          }),
+        );
+        setIsPreview(true);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
     }),
   );
 
@@ -133,7 +154,7 @@ export const ReviewForm = ({ productId, initialData }: ReviewFormProps) => {
           variant="elevated"
           type="button"
           size="lg"
-          className="w-fit bg-black text-white hover:bg-pink-400 hover:text-primary"
+          className="w-fit bg-black text-white hover:bg-pink-400 hover:text-primary mt-4"
           onClick={() => setIsPreview(false)}
         >
           Edit
