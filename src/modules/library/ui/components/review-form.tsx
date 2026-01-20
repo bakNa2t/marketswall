@@ -143,6 +143,7 @@ export const ReviewForm = ({ productId, initialData }: ReviewFormProps) => {
             type="submit"
             size="lg"
             className="w-fit bg-black text-white hover:bg-pink-400 hover:text-primary"
+            disabled={createReview.isPending || updateReview.isPending}
           >
             {initialData ? "Update review" : "Post review"}
           </Button>
