@@ -12,7 +12,7 @@ export const productsRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const headers = await getHeaders();
@@ -68,7 +68,7 @@ export const productsRouter = createTRPCRouter({
         tags: z.array(z.string()).nullable().optional(),
         sort: z.enum(sortValues).nullable().optional(),
         tenantSlug: z.string().nullable().optional(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const where: Where = {};
@@ -135,8 +135,8 @@ export const productsRouter = createTRPCRouter({
         if (parentCategory) {
           subcategoriesSlugs.push(
             ...parentCategory.subcategories.map(
-              (subcategory) => subcategory.slug
-            )
+              (subcategory) => subcategory.slug,
+            ),
           );
 
           where["category.slug"] = {
@@ -160,9 +160,35 @@ export const productsRouter = createTRPCRouter({
         limit: input.limit,
       });
 
+      const dataWithSummarizedReviews = await Promise.all(
+        data.docs.map(async (doc) => {
+          const reviewsData = await ctx.db.find({
+            collection: "reviews",
+            pagination: false,
+            where: {
+              product: {
+                equals: doc.id,
+              },
+            },
+          });
+
+          return {
+            ...doc,
+            reviewCount: reviewsData.totalDocs,
+            reviewRating:
+              reviewsData.docs.length === 0
+                ? 0
+                : reviewsData.docs.reduce(
+                    (acc, review) => acc + review.rating,
+                    0,
+                  ) / reviewsData.totalDocs,
+          };
+        }),
+      );
+
       return {
         ...data,
-        docs: data.docs.map((doc) => ({
+        docs: dataWithSummarizedReviews.map((doc) => ({
           ...doc,
           image: doc.image as Media | null,
           tenant: doc.tenant as Tenant & { image: Media | null },
