@@ -33,8 +33,8 @@ export const ProductList = ({
           getNextPageParam: (lastPage) => {
             return lastPage.docs.length > 0 ? lastPage.nextPage : undefined;
           },
-        }
-      )
+        },
+      ),
     );
 
   if (data.pages?.[0]?.docs.length === 0) {
@@ -51,7 +51,7 @@ export const ProductList = ({
       <div
         className={cn(
           "grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4",
-          narrowView && "lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3"
+          narrowView && "lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3",
         )}
       >
         {data?.pages
@@ -64,8 +64,8 @@ export const ProductList = ({
               imageUrl={product.image?.url}
               tenantSlug={product.tenant?.slug}
               tenantImageUrl={product.tenant?.image?.url}
-              reviewRating={4}
-              reviewCount={5}
+              reviewRating={product.reviewRating}
+              reviewCount={product.reviewCount}
               price={product.price}
             />
           ))}
@@ -92,7 +92,7 @@ export const ProductListSkeleton = ({ narrowView }: ProductListProps) => {
     <div
       className={cn(
         "grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4",
-        narrowView && "lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3"
+        narrowView && "lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3",
       )}
     >
       {Array.from({ length: DEFAULT_LIMIT }).map((_, index) => (
