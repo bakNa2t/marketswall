@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { toast } from "sonner";
 import { Fragment } from "react";
 import dynamic from "next/dynamic";
 import { LinkIcon, StarIcon } from "lucide-react";
@@ -130,7 +131,10 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
                   <Button
                     variant="elevated"
                     className="size-12"
-                    onClick={() => {}}
+                    onClick={() => {
+                      navigator.clipboard.writeText(window.location.href);
+                      toast.success("Link copied to clipboard");
+                    }}
                     disabled={false}
                   >
                     <LinkIcon />
@@ -150,8 +154,8 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
 
                   <div className="flex items-center gap-x-1 font-medium">
                     <StarIcon className="size-4 fill-black" />
-                    <p>({5})</p>
-                    <p className="text-base">{5} ratings</p>
+                    <p>({data.reviewRating})</p>
+                    <p className="text-base">{data.reviewCount} ratings</p>
                   </div>
                 </div>
 
@@ -161,8 +165,13 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
                       <div className="font-medium">
                         {stars} {stars === 1 ? "star" : "stars"}
                       </div>
-                      <Progress value={0} className="h-[1lh]" />
-                      <div className="font-medium">{0}%</div>
+                      <Progress
+                        value={data.ratingDistribution[stars]}
+                        className="h-[1lh]"
+                      />
+                      <div className="font-medium">
+                        {data.ratingDistribution[stars]}%
+                      </div>
                     </Fragment>
                   ))}
                 </div>
