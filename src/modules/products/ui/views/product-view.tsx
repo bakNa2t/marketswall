@@ -23,7 +23,7 @@ const CartButton = dynamic(
         Add to cart
       </Button>
     ),
-  }
+  },
 );
 
 interface ProductViewProps {
@@ -34,7 +34,7 @@ interface ProductViewProps {
 export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
   const trpc = useTRPC();
   const { data } = useSuspenseQuery(
-    trpc.products.getOne.queryOptions({ id: productId })
+    trpc.products.getOne.queryOptions({ id: productId }),
   );
 
   return (
@@ -85,14 +85,24 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
               </div>
 
               <div className="hidden lg:flex items-center justify-center px-6 py-4">
-                <StarRating rating={4} iconClassName="size-4" />
+                <div className="flex items-center gap-2">
+                  <StarRating
+                    rating={data.reviewRating}
+                    iconClassName="size-4"
+                  />
+                  <p className="text-base font-medium">
+                    {data.reviewCount} ratings
+                  </p>
+                </div>
               </div>
             </div>
 
             <div className="block lg:hidden px-6 py-4 items-center justify-center border-b">
-              <div className="flex items-center gap-1">
-                <StarRating rating={4} iconClassName="size-4" />
-                <p className="text-base font-medium">{5} ratings</p>
+              <div className="flex items-center gap-2">
+                <StarRating rating={data.reviewRating} iconClassName="size-4" />
+                <p className="text-base font-medium">
+                  {data.reviewCount} ratings
+                </p>
               </div>
             </div>
 
