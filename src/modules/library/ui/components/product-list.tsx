@@ -19,8 +19,8 @@ export const ProductList = () => {
           getNextPageParam: (lastPage) => {
             return lastPage.docs.length > 0 ? lastPage.nextPage : undefined;
           },
-        }
-      )
+        },
+      ),
     );
 
   if (data.pages?.[0]?.docs.length === 0) {
@@ -45,8 +45,8 @@ export const ProductList = () => {
               imageUrl={product.image?.url}
               tenantSlug={product.tenant?.slug}
               tenantImageUrl={product.tenant?.image?.url}
-              reviewRating={4}
-              reviewCount={5}
+              reviewRating={product.reviewRating}
+              reviewCount={product.reviewCount}
             />
           ))}
       </div>
