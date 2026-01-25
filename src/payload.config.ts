@@ -16,8 +16,9 @@ import { Products } from "./collections/Products";
 import { Reviews } from "./collections/Reviews";
 import { Tags } from "./collections/Tags";
 import { Tenants } from "./collections/Tenants";
-// import { isSuperAdmin } from "./lib/access";
 import { Config } from "./payload-types";
+
+import { isSuperAdmin } from "./lib/access";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -61,8 +62,7 @@ export default buildConfig({
       tenantsArrayField: {
         includeDefaultField: false,
       },
-      userHasAccessToAllTenants: (user) =>
-        Boolean(user?.roles?.includes("super-admin")),
+      userHasAccessToAllTenants: (user) => isSuperAdmin(user),
       // userHasAccessToAllTenants: (user) => isSuperAdmin(user),
     }),
     // vercelBlobStorage({
