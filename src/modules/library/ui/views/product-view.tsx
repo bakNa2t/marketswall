@@ -15,7 +15,7 @@ interface ProductViewProps {
 export const ProductView = ({ productId }: ProductViewProps) => {
   const trpc = useTRPC();
   const { data } = useSuspenseQuery(
-    trpc.library.getOne.queryOptions({ productId })
+    trpc.library.getOne.queryOptions({ productId }),
   );
 
   return (
@@ -42,9 +42,13 @@ export const ProductView = ({ productId }: ProductViewProps) => {
           </div>
 
           <div className="lg:col-span-5">
-            <p className="font-medium text-muted-foreground italic">
-              No special content
-            </p>
+            {data.content ? (
+              <p>{data.content}</p>
+            ) : (
+              <p className="font-medium text-muted-foreground italic">
+                No special content
+              </p>
+            )}
           </div>
         </div>
       </section>
