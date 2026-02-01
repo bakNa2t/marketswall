@@ -12,12 +12,55 @@ import { TRPCError } from "@trpc/server";
 import { CheckoutMetadata, ProductMetadata } from "../types";
 
 export const checkoutRouter = createTRPCRouter({
+  verify: protectedProcedure.mutation(async ({ ctx }) => {
+    const user = await ctx.db.findByID({
+      collection: "users",
+      id: ctx.session.user.id,
+      depth: 0,
+    });
+
+    if (!user) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found",
+      });
+    }
+
+    const tenantId = user.tenants?.[0]?.tenant as string;
+    const tenant = await ctx.db.findByID({
+      collection: "tenants",
+      id: tenantId,
+    });
+
+    if (!tenant) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Tenant not found",
+      });
+    }
+
+    const accountLink = await stripe.accountLinks.create({
+      account: tenant.stripeAccountId,
+      refresh_url: `${process.env.NEXT_PUBLIC_APP_URL!}/admin`,
+      return_url: `${process.env.NEXT_PUBLIC_APP_URL!}/admin`,
+      type: "account_onboarding",
+    });
+
+    if (!accountLink.url) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Failed to create verification link",
+      });
+    }
+
+    return { url: accountLink.url };
+  }),
   purchase: protectedProcedure
     .input(
       z.object({
         productIds: z.array(z.string()).min(1),
         tenantSlug: z.string().min(1),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const products = await ctx.db.find({
@@ -113,7 +156,7 @@ export const checkoutRouter = createTRPCRouter({
     .input(
       z.object({
         ids: z.array(z.string()),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const data = await ctx.db.find({
