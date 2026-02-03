@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     event = stripe.webhooks.constructEvent(
       await (await req.blob()).text(),
       req.headers.get("stripe-signature") as string,
-      process.env.STRIPE_WEBHOOK_SECRET as string
+      process.env.STRIPE_WEBHOOK_SECRET as string,
     );
   } catch (error) {
     const errorMessage =
@@ -27,13 +27,16 @@ export async function POST(req: Request) {
 
     return NextResponse.json(
       { message: `Webhook Error: ${errorMessage}` },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   console.log("Success: ", event.id);
 
-  const permittedEvents: string[] = ["checkout.session.completed"];
+  const permittedEvents: string[] = [
+    "checkout.session.completed",
+    "account.updated",
+  ];
 
   const payload = await getPayload({ config });
 
@@ -62,7 +65,7 @@ export async function POST(req: Request) {
             data.id,
             {
               expand: ["line_items.data.price.product"],
-            }
+            },
           );
 
           if (
@@ -88,13 +91,29 @@ export async function POST(req: Request) {
           }
           break;
 
+        case "account.updated":
+          data = event.data.object as Stripe.Account;
+
+          await payload.update({
+            collection: "tenants",
+            where: {
+              stripeAccountId: {
+                equals: data.id,
+              },
+            },
+            data: {
+              stripeDetailsSubmitted: data.details_submitted,
+            },
+          });
+          break;
+
           defailt: throw new Error(`Unhandled event: ${event.type}`);
       }
     } catch (error) {
       console.log(error);
       return NextResponse.json(
         { message: "Webhook handler failed" },
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
