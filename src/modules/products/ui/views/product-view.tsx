@@ -190,3 +190,20 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
     </div>
   );
 };
+
+export const ProductViewSkeleton = () => {
+  return (
+    <div className="pxx-4 lg:px-12 py-10">
+      <div className="border rounded-sm bg-white overflow-hidden">
+        <div className="relative aspect-[3.9] border-b">
+          <Image
+            fill
+            alt="Placeholder"
+            src={"/placeholder.png"}
+            className="object-cover"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
