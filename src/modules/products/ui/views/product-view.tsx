@@ -7,6 +7,7 @@ import { Fragment, useState } from "react";
 import dynamic from "next/dynamic";
 import { CheckIcon, LinkIcon, StarIcon } from "lucide-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { RichText } from "@payloadcms/richtext-lexical/react";
 
 import { Button } from "@/components/ui/button";
 import { StarRating } from "@/components/star-rating";
@@ -111,7 +112,8 @@ export const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
 
             <div className="p-6">
               {data.description ? (
-                <p className="text-muted-foreground">{data.description}</p>
+                // <p className="text-muted-foreground">{data.description}</p>
+                <RichText data={data.description} />
               ) : (
                 <p className="font-medium text-muted-foreground">
                   No description provided
