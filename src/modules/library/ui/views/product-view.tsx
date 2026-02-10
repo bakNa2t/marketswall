@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowLeftIcon } from "lucide-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { RichText } from "@payloadcms/richtext-lexical/react";
 
 import { ReviewSidebar } from "../components/review-sidebar";
 
@@ -43,7 +44,7 @@ export const ProductView = ({ productId }: ProductViewProps) => {
 
           <div className="lg:col-span-5">
             {data.content ? (
-              <p>{data.content}</p>
+              <RichText data={data.content} />
             ) : (
               <p className="font-medium text-muted-foreground italic">
                 No special content
