@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { Suspense } from "react";
 import { ArrowLeftIcon } from "lucide-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 
 import { ReviewSidebar } from "../components/review-sidebar";
+import { ReviewFormSkeleton } from "../components/review-form";
 
 import { useTRPC } from "@/trpc/client";
 
@@ -38,7 +40,9 @@ export const ProductView = ({ productId }: ProductViewProps) => {
         <div className="grid grid-cols-1 lg:grid-cols-7 gap-1 lg:gap-16">
           <div className="lg:col-span-2">
             <div className="gap-4 p-4 bg-white rounded-md border">
-              <ReviewSidebar productId={productId} />
+              <Suspense fallback={<ReviewFormSkeleton />}>
+                <ReviewSidebar productId={productId} />
+              </Suspense>
             </div>
           </div>
 
