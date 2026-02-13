@@ -10,7 +10,7 @@ interface StarPickerProps {
   value?: number;
   disabled?: boolean;
   className?: string;
-  onChange: (value: number) => void;
+  onChange?: (value: number) => void;
 }
 
 export const StarPicker = ({
